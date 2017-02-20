@@ -22,6 +22,15 @@
         tools:context="com.maksym.android.words.learner.MainActivity">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="HELLO WORLD"
+            android:id="@+id/capitalWordTextView"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
             android:text="hello world"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,6 +51,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:clickable="false" />
+
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

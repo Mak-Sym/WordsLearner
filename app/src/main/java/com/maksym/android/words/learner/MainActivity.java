@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -50,7 +52,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void renderNextWord() {
         TextView wordTextView = (TextView) findViewById(R.id.wordTextView);
-        wordTextView.setText(words[rnd.nextInt(words.length)]);
+        int currentWordIndex = words.indexOf(wordTextView.getText().toString());
+        int newIndex;
+        do {
+            newIndex = rnd.nextInt(words.size());
+        } while (newIndex != currentWordIndex);
+        wordTextView.setText(words.get(newIndex));
+
+        wordTextView = (TextView) findViewById(R.id.capitalWordTextView);
+        wordTextView.setText(words.get(newIndex).toUpperCase());
     }
 
     private void play(String textToPlay) {
@@ -76,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private static final String words[] = { "a",
+    private static final List<String> words = Arrays.asList("a",
                                             "and",
                                             "be",
                                             "I",
@@ -87,5 +97,5 @@ public class MainActivity extends AppCompatActivity {
                                             "that",
                                             "the",
                                             "to",
-                                            "was"};
+                                            "was");
 }
