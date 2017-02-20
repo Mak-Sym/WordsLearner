@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Words</string>
+    <string name="title_activity_sentence">SentenceActivity</string>
 </resources>

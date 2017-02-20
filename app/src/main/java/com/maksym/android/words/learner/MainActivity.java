@@ -4,18 +4,20 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import com.maksym.android.words.learner.data.Data;
+import com.maksym.android.words.learner.utils.Time;
+import com.maksym.android.words.learner.utils.Views;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
-import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainActivity extends AppCompatActivity {
     private TextToSpeech textToSpeech;
-    private final Random rnd = new Random(System.currentTimeMillis());
+    private volatile AtomicBoolean speaking = new AtomicBoolean(false);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +29,21 @@ public class MainActivity extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView wordTextView = (TextView) findViewById(R.id.wordTextView);
-                String word = wordTextView.getText().toString();
-                play(word);
+                if(speaking.compareAndSet(false, true)) {
+                    playButton.setEnabled(false);
+                    playButton.setClickable(false);
+                    TextView exampleTextView = (TextView) findViewById(R.id.exampleTextView);
+                    play(Data.currentWord());
+                    Time.sleep(2000);
+                    play(exampleTextView.getText().toString());
+                    Time.sleep(3000);
+                    renderNextWord();
+                    speaking.set(false);
+                    playButton.setEnabled(true);
+                    playButton.setClickable(true);
+                } else {
+                    Log.d("DEBUG", "Skipping play");
+                }
             }
         });
 
@@ -45,32 +59,38 @@ public class MainActivity extends AppCompatActivity {
                     fallbackToMediaPlayer();
                 }
             }
-        });
+        });/*
+
+        final TextView wordTextView = (TextView) findViewById(R.id.wordTextView);
+        wordTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SentenceActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });*/
 
         renderNextWord();
     }
 
     private void renderNextWord() {
-        TextView wordTextView = (TextView) findViewById(R.id.wordTextView);
-        int currentWordIndex = words.indexOf(wordTextView.getText().toString());
-        int newIndex;
-        do {
-            newIndex = rnd.nextInt(words.size());
-        } while (newIndex != currentWordIndex);
-        wordTextView.setText(words.get(newIndex));
+        String word = Data.nextWord();
 
-        wordTextView = (TextView) findViewById(R.id.capitalWordTextView);
-        wordTextView.setText(words.get(newIndex).toUpperCase());
+        TextView textView = (TextView) findViewById(R.id.wordTextView);
+        textView.setText(word);
+
+        textView = (TextView) findViewById(R.id.capitalWordTextView);
+        textView.setText(word.toUpperCase());
+
+        textView = (TextView) findViewById(R.id.exampleTextView);
+        textView.setText(Views.highlight(Data.currentWord(), Data.example()));
     }
 
     private void play(String textToPlay) {
         if(!textToSpeech.isSpeaking()) {
-            textToSpeech.speak(textToPlay, TextToSpeech.QUEUE_FLUSH, null);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ignored) { }
-            renderNextWord();
+            Time.sleep(100);
         }
+        textToSpeech.speak(textToPlay, TextToSpeech.QUEUE_FLUSH, null, "textToPlay");
     }
 
     private void fallbackToMediaPlayer() {
@@ -85,17 +105,4 @@ public class MainActivity extends AppCompatActivity {
         textToSpeech.shutdown();
         super.onDestroy();
     }
-
-    private static final List<String> words = Arrays.asList("a",
-                                            "and",
-                                            "be",
-                                            "I",
-                                            "in",
-                                            "is",
-                                            "it",
-                                            "of",
-                                            "that",
-                                            "the",
-                                            "to",
-                                            "was");
 }
