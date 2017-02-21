@@ -4,20 +4,16 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import com.maksym.android.words.learner.data.Data;
-import com.maksym.android.words.learner.utils.Time;
 import com.maksym.android.words.learner.utils.Views;
 
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainActivity extends AppCompatActivity {
     private TextToSpeech textToSpeech;
-    private volatile AtomicBoolean speaking = new AtomicBoolean(false);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,21 +25,7 @@ public class MainActivity extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(speaking.compareAndSet(false, true)) {
-                    playButton.setEnabled(false);
-                    playButton.setClickable(false);
-                    TextView exampleTextView = (TextView) findViewById(R.id.exampleTextView);
-                    play(Data.currentWord());
-                    Time.sleep(2000);
-                    play(exampleTextView.getText().toString());
-                    Time.sleep(3000);
-                    renderNextWord();
-                    speaking.set(false);
-                    playButton.setEnabled(true);
-                    playButton.setClickable(true);
-                } else {
-                    Log.d("DEBUG", "Skipping play");
-                }
+                renderNextWord();
             }
         });
 
@@ -59,16 +41,23 @@ public class MainActivity extends AppCompatActivity {
                     fallbackToMediaPlayer();
                 }
             }
-        });/*
+        });
 
-        final TextView wordTextView = (TextView) findViewById(R.id.wordTextView);
+        TextView wordTextView = (TextView) findViewById(R.id.wordTextView);
         wordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SentenceActivity.class);
-                MainActivity.this.startActivity(intent);
+                play(Data.currentWord());
             }
-        });*/
+        });
+
+        final TextView exampleTextView = (TextView) findViewById(R.id.exampleTextView);
+        exampleTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                play(exampleTextView.getText().toString());
+            }
+        });
 
         renderNextWord();
     }
@@ -88,9 +77,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void play(String textToPlay) {
         if(!textToSpeech.isSpeaking()) {
-            Time.sleep(100);
+            textToSpeech.speak(textToPlay, TextToSpeech.QUEUE_FLUSH, null, textToPlay);
         }
-        textToSpeech.speak(textToPlay, TextToSpeech.QUEUE_FLUSH, null, "textToPlay");
     }
 
     private void fallbackToMediaPlayer() {

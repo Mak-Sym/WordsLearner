@@ -12,7 +12,6 @@ import static java.util.Arrays.asList;
 
 public class Data {
     private static AtomicInteger currentWordIndex = new AtomicInteger(0);
-    private static AtomicInteger currentExampleIndex = new AtomicInteger(0);
 
     private static final Random rnd = new Random(System.currentTimeMillis());
 
@@ -40,7 +39,7 @@ public class Data {
             entry("of", asList("Take care of yourself")),
             entry("that", asList("That is good")),
             entry("the", asList("My school is the best")),
-            entry("to", asList("I can count from one to ten", "I have never been to London")),
+            entry("to", asList("I like to jump", "I like to swim", "I like to play")),
             entry("was", asList("I was very surprised yesterday", "I was tired"))
     );
 
