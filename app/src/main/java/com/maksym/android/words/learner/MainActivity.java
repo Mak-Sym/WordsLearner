@@ -1,5 +1,6 @@
 package com.maksym.android.words.learner;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.martian_gun);
 
         final ImageButton playButton = (ImageButton) findViewById(R.id.playwordbutton);
         playButton.setEnabled(false);
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 renderNextWord();
+                updateCounter(mediaPlayer);
             }
         });
 
@@ -51,6 +54,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        final TextView counterTextView = (TextView) findViewById(R.id.wordsCounterTextView);
+        counterTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                counterTextView.setText("15");
+            }
+        });
+
         final TextView exampleTextView = (TextView) findViewById(R.id.exampleTextView);
         exampleTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +71,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
         renderNextWord();
+    }
+
+    private void updateCounter(MediaPlayer mediaPlayer) {
+        TextView textView = (TextView) findViewById(R.id.wordsCounterTextView);
+        int value = Integer.parseInt(textView.getText().toString()) - 1;
+        if(value == 0) {
+            mediaPlayer.start();
+        }
+        if(value == -1) {
+            value = 15;
+        }
+        textView.setText(String.valueOf(value));
     }
 
     private void renderNextWord() {
