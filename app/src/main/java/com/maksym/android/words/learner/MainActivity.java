@@ -14,6 +14,7 @@ import com.maksym.android.words.learner.utils.Views;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int ROUNDS_COUNT = 15;
     private TextToSpeech textToSpeech;
 
     @Override
@@ -55,10 +56,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         final TextView counterTextView = (TextView) findViewById(R.id.wordsCounterTextView);
+        counterTextView.setText(String.valueOf(ROUNDS_COUNT));
         counterTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                counterTextView.setText("15");
+                counterTextView.setText(String.valueOf(ROUNDS_COUNT));
             }
         });
 
@@ -78,9 +80,7 @@ public class MainActivity extends AppCompatActivity {
         int value = Integer.parseInt(textView.getText().toString()) - 1;
         if(value == 0) {
             mediaPlayer.start();
-        }
-        if(value == -1) {
-            value = 15;
+            value = ROUNDS_COUNT;
         }
         textView.setText(String.valueOf(value));
     }
