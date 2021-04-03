@@ -24,7 +24,7 @@ public class Data {
             "it",
             "of",
             "that",
-            "the",
+            "the"/*,
             "to",
             "was",
             "all",
@@ -46,7 +46,7 @@ public class Data {
             "they",
             "we",
             "with",
-            "you");
+            "you"*/);
 
     private static final Map<String, List<String>> EXAMPLES = Maps.map(
             entry("a", asList("A bus is big", "This is a cute dog", "I have a sister",
@@ -61,7 +61,7 @@ public class Data {
             entry("it", asList("It is my favourite game", "I forgot about it", "It is true")),
             entry("of", asList("Take care of yourself", "Best wishes to all of you")),
             entry("that", asList("That is good")),
-            entry("the", asList("My school is the best", "We are the champions", "I climb in the big race")),
+            entry("the", asList("My school is the best", "We are the champions", "I climb in the big race"))/*,
             entry("to", asList("I like to jump", "I like to swim", "I like to play", "We are happy to go to school",
                     "Best wishes to all of you", "People want to fly, but they do not have wings")),
             entry("was", asList("I was very surprised yesterday", "I was tired", "I said it was good")),
@@ -94,7 +94,7 @@ public class Data {
             entry("with", asList("I want to play with you", "I like to play with my sister",
                     "I always help my sister with her tasks")),
             entry("you", asList("I want to play with you",
-                    "Best wishes to all of you", "It would be good for you and me"))
+                    "Best wishes to all of you", "It would be good for you and me"))*/
     );
 
     public static String nextWord() {
